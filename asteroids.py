@@ -13,13 +13,6 @@ import random
 import math
 import arcade
 import os
-print ("hallo")
-
-
-
-
-
-
 
 
 from typing import cast
