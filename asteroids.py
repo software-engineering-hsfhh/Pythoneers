@@ -14,6 +14,8 @@ import math
 import arcade
 import os
 
+print ("Hello")
+
 from typing import cast
 
 STARTING_ASTEROID_COUNT = 8
