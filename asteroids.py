@@ -14,6 +14,8 @@ import math
 import arcade
 import os
 
+name = 'Catalyn'
+print('Hello + name + !')
 
 from typing import cast
 
