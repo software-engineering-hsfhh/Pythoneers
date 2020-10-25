@@ -1,5 +1,5 @@
 """
-Asteroid Smasher
+Asteroid Smasher Test
 
 Shoot space rocks in this demo program created with
 Python and the Arcade library.
