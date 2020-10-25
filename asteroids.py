@@ -14,7 +14,7 @@ import math
 import arcade
 import os
 
-print ("Hello")
+print ("Tschüss")
 
 from typing import cast
 
