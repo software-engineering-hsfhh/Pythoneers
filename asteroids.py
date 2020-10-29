@@ -169,7 +169,7 @@ class MyGame(arcade.Window):
 
         # Sounds
         Background_Music = arcade.load_sound(":resources:music/1918.mp3")
-        arcade.play_sound(Background_Music)
+        arcade.play_sound(Background_Music, 0.1)
 
         self.laser_sound = arcade.load_sound(":resources:sounds/hurt5.wav")
         self.hit_sound1 = arcade.load_sound(":resources:sounds/explosion1.wav")
@@ -281,7 +281,7 @@ class MyGame(arcade.Window):
 
             self.bullet_list.append(bullet_sprite)
 
-            arcade.play_sound(self.laser_sound)
+            arcade.play_sound(self.laser_sound, 0.1)
 
         if symbol == arcade.key.LEFT:
             self.player_sprite.change_angle = 3
@@ -414,30 +414,32 @@ class MyGame(arcade.Window):
                         print("Du Lappen hast einen Unfall gebaut!")
                     else:
                         self.game_over = True
-                        print("Game over")
-                        class GameOverView(arcade.View):
-                            """ View to show when game is over """
+                        print("Du Lappen hast zu viele Unfälle gebaut... Game Over")
 
-                            def __init__(self):
-                                """ This is run once when we switch to this view """
-                                super().__init__()
-                                self.texture = arcade.load_texture("game_over.png")
 
-                                # Reset the viewport, necessary if we have a scrolling game and we need
-                                # to reset the viewport back to the start so we can see what we draw.
-                                arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
+class GameOverView(arcade.View):
+        """ View to show when game is over """
 
-                            def on_draw(self):
-                                """ Draw this view """
-                                arcade.start_render()
-                                self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                                                        SCREEN_WIDTH, SCREEN_HEIGHT)
+        def __init__(self):
+            """ This is run once when we switch to this view """
+            super().__init__()
+            self.texture = arcade.load_texture("game_over.png")
 
-                            def on_mouse_press(self, _x, _y, _button, _modifiers):
-                                """ If the user presses the mouse button, re-start the game. """
-                                game_view = GameView()
-                                game_view.setup()
-                                self.window.show_view(game_view)
+            # Reset the viewport, necessary if we have a scrolling game and we need
+            # to reset the viewport back to the start so we can see what we draw.
+            arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
+
+        def on_draw(self):
+            """ Draw this view """
+            arcade.start_render()
+            self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                                    SCREEN_WIDTH, SCREEN_HEIGHT)
+
+        def on_mouse_press(self, _x, _y, _button, _modifiers):
+            """ If the user presses the mouse button, re-start the game. """
+            game_view = GameView()
+            game_view.setup()
+            self.window.show_view(game_view)
 
 
 def main():
