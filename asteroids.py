@@ -14,15 +14,14 @@ import math
 import arcade
 import os
 
-print ("Tschüss")
 
 from typing import cast
 
-STARTING_ASTEROID_COUNT = 8
+STARTING_ASTEROID_COUNT = 3
 SCALE = 0.5
-OFFSCREEN_SPACE = 300
-SCREEN_WIDTH = 1920
-SCREEN_HEIGHT = 1200
+OFFSCREEN_SPACE = 0
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Asteroid Smasher - created by Pythoneers"
 LEFT_LIMIT = -OFFSCREEN_SPACE
 RIGHT_LIMIT = SCREEN_WIDTH + OFFSCREEN_SPACE
@@ -163,11 +162,12 @@ class MyGame(arcade.Window):
         self.player_sprite_list = arcade.SpriteList()
         self.asteroid_list = arcade.SpriteList()
         self.bullet_list = arcade.SpriteList()
+        self.ship_life_list = arcade.SpriteList()
 
         # Set up the player
         self.score = 0
         self.player_sprite = None
-        self.lives = 0
+        self.lives = 3
 
         # Sounds
         self.laser_sound = arcade.load_sound(":resources:sounds/hurt5.wav")
@@ -203,19 +203,19 @@ class MyGame(arcade.Window):
 
         # Set up the player
         self.score = 0
-        self.player_sprite = ShipSprite(":resources:images/enemies/bee.png", SCALE)
+        self.player_sprite = ShipSprite(":resources:images/space_shooter/playerShip2_orange.png", SCALE)
         self.player_sprite_list.append(self.player_sprite)
         self.lives = 3
-
+###################################################################################################################
         # ToDo: Set up the little icons that represent the player lives.
-        cur_pos = 10
+        cur_pos = 8
         for i in range(self.lives):
             life = arcade.Sprite(":resources:images/space_shooter/playerLife1_orange.png", SCALE)
             life.center_x = cur_pos + life.width
             life.center_y = life.height
             cur_pos += life.width
             self.ship_life_list.append(life)
-
+########################################################################################################
         # Make the asteroids
         image_list = (":resources:images/space_shooter/meteorGrey_big1.png",
                       ":resources:images/space_shooter/meteorGrey_big2.png",
@@ -248,17 +248,26 @@ class MyGame(arcade.Window):
         # Draw the background texture
         #arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
+################################################################################################################
+
         # Draw all the sprites.
         self.asteroid_list.draw()
+        self.ship_life_list.draw()
         self.bullet_list.draw()
         self.player_sprite_list.draw()
+        # Put the text on the screen.
+        output = f"Score: {self.score}"
+        arcade.draw_text(output, 10, 70, arcade.color.WHITE, 13)
 
+        output = f"Asteroid Count: {len(self.asteroid_list)}"
+        arcade.draw_text(output, 10, 50, arcade.color.WHITE, 13)
+################################################################################################################
     def on_key_press(self, symbol, modifiers):
         """ Called whenever a key is pressed. """
         if not self.player_sprite.respawning and symbol == arcade.key.SPACE:
             bullet_sprite = TurningSprite(":resources:images/space_shooter/laserBlue01.png", SCALE)
             bullet_sprite.guid = "Bullet"
-            bullet_speed = 30
+            bullet_speed = 50
             bullet_sprite.change_y = \
                 math.cos(math.radians(self.player_sprite.angle)) * bullet_speed
             bullet_sprite.change_x = \
@@ -302,8 +311,8 @@ class MyGame(arcade.Window):
         if asteroid.size == 4:
             for i in range(3):
                 image_no = random.randrange(2)
-                image_list = [":resources:images/space_shooter/playerShip1_green.png",
-                              ":resources:images/space_shooter/playerShip1_green.png"]
+                image_list = [":resources:images/space_shooter/meteorGrey_med1.png",
+                              ":resources:images/space_shooter/meteorGrey_med1.png"]
 
                 enemy_sprite = AsteroidSprite(image_list[image_no],
                                               SCALE * 1.5)
@@ -322,8 +331,8 @@ class MyGame(arcade.Window):
         elif asteroid.size == 3:
             for i in range(3):
                 image_no = random.randrange(2)
-                image_list = [":resources:images/space_shooter/playerLife1_orange.png",
-                              ":resources:images/space_shooter/playerLife1_orange.png"]
+                image_list = [":resources:images/space_shooter/meteorGrey_med2.png",
+                              ":resources:images/space_shooter/meteorGrey_med2.png"]
 
                 enemy_sprite = AsteroidSprite(image_list[image_no],
                                               SCALE * 1.5)
@@ -338,12 +347,12 @@ class MyGame(arcade.Window):
                 enemy_sprite.size = 2
 
                 self.asteroid_list.append(enemy_sprite)
-
+                self.hit_sound2.play()
         elif asteroid.size == 2:
             for i in range(3):
                 image_no = random.randrange(2)
-                image_list = [":resources:images/space_shooter/playerLife1_orange.png",
-                              ":resources:images/space_shooter/playerLife1_orange.png"]
+                image_list = [":resources:images/space_shooter/meteorGrey_small1.png",
+                              ":resources:images/space_shooter/meteorGrey_small1.png"]
 
                 enemy_sprite = AsteroidSprite(image_list[image_no],
                                               SCALE * 1.5)
@@ -358,6 +367,7 @@ class MyGame(arcade.Window):
                 enemy_sprite.size = 1
 
                 self.asteroid_list.append(enemy_sprite)
+                self.hit_sound3.play()
 
         elif asteroid.size == 1:
             pass
@@ -404,6 +414,30 @@ class MyGame(arcade.Window):
                     else:
                         self.game_over = True
                         print("Game over")
+                        class GameOverView(arcade.View):
+                            """ View to show when game is over """
+
+                            def __init__(self):
+                                """ This is run once when we switch to this view """
+                                super().__init__()
+                                self.texture = arcade.load_texture("game_over.png")
+
+                                # Reset the viewport, necessary if we have a scrolling game and we need
+                                # to reset the viewport back to the start so we can see what we draw.
+                                arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
+
+                            def on_draw(self):
+                                """ Draw this view """
+                                arcade.start_render()
+                                self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                                                        SCREEN_WIDTH, SCREEN_HEIGHT)
+
+                            def on_mouse_press(self, _x, _y, _button, _modifiers):
+                                """ If the user presses the mouse button, re-start the game. """
+                                game_view = GameView()
+                                game_view.setup()
+                                self.window.show_view(game_view)
+
 
 def main():
     """ Start the game """
