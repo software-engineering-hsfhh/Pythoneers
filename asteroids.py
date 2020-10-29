@@ -13,8 +13,6 @@ import random
 import math
 import arcade
 import os
-
-
 from typing import cast
 
 STARTING_ASTEROID_COUNT = 3
@@ -27,6 +25,7 @@ LEFT_LIMIT = -OFFSCREEN_SPACE
 RIGHT_LIMIT = SCREEN_WIDTH + OFFSCREEN_SPACE
 BOTTOM_LIMIT = -OFFSCREEN_SPACE
 TOP_LIMIT = SCREEN_HEIGHT + OFFSCREEN_SPACE
+
 
 class TurningSprite(arcade.Sprite):
     """ Sprite that sets its angle to the direction it is traveling in. """
@@ -155,7 +154,6 @@ class MyGame(arcade.Window):
         os.chdir(file_path)
 
         self.frame_count = 0
-
         self.game_over = False
 
         # Sprite lists
@@ -170,11 +168,15 @@ class MyGame(arcade.Window):
         self.lives = 3
 
         # Sounds
+        Background_Music = arcade.load_sound(":resources:music/1918.mp3")
+        arcade.play_sound(Background_Music)
+
         self.laser_sound = arcade.load_sound(":resources:sounds/hurt5.wav")
         self.hit_sound1 = arcade.load_sound(":resources:sounds/explosion1.wav")
         self.hit_sound2 = arcade.load_sound(":resources:sounds/explosion2.wav")
         self.hit_sound3 = arcade.load_sound(":resources:sounds/hit1.wav")
         self.hit_sound4 = arcade.load_sound(":resources:sounds/hit2.wav")
+
 
         #Mouse Invisible /JD
         self.set_mouse_visible(False)
@@ -182,7 +184,6 @@ class MyGame(arcade.Window):
         #Background
         self.background = None
         arcade.set_background_color(arcade.color.DARK_BLUE)
-
 
     def setup(self):
         self.background = arcade.load_texture(":resources:images/backgrounds/abstract_1.jpg")
