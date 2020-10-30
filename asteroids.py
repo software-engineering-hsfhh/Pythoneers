@@ -183,7 +183,7 @@ class MyGame(arcade.Window):
 
         #Background
         self.background = None
-        arcade.set_background_color(arcade.color.DARK_BLUE)
+        arcade.set_background_color(arcade.color.DARK_VANILLA)
 
     def setup(self):
         self.background = arcade.load_texture(":resources:images/backgrounds/abstract_1.jpg")
