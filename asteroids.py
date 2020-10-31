@@ -169,7 +169,7 @@ class MyGame(arcade.Window):
 
         # Sounds
         Background_Music = arcade.load_sound(":resources:music/1918.mp3")
-        arcade.play_sound(Background_Music, 0.1)
+        arcade.play_sound(Background_Music, 0.05)
 
         self.laser_sound = arcade.load_sound(":resources:sounds/hurt5.wav")
         self.hit_sound1 = arcade.load_sound(":resources:sounds/explosion1.wav")
@@ -281,7 +281,7 @@ class MyGame(arcade.Window):
 
             self.bullet_list.append(bullet_sprite)
 
-            arcade.play_sound(self.laser_sound, 0.1)
+            arcade.play_sound(self.laser_sound, 0.03)
 
         if symbol == arcade.key.LEFT:
             self.player_sprite.change_angle = 3
@@ -348,7 +348,7 @@ class MyGame(arcade.Window):
                 enemy_sprite.size = 2
 
                 self.asteroid_list.append(enemy_sprite)
-                self.hit_sound2.play()
+                self.hit_sound2.play(0.01)
         elif asteroid.size == 2:
             for i in range(3):
                 image_no = random.randrange(2)
@@ -368,7 +368,7 @@ class MyGame(arcade.Window):
                 enemy_sprite.size = 1
 
                 self.asteroid_list.append(enemy_sprite)
-                self.hit_sound3.play()
+                self.hit_sound3.play(0.01)
 
         elif asteroid.size == 1:
             pass
