@@ -265,7 +265,7 @@ class MyGame(arcade.Window):
         for i in range(20):
             # Create the coin instance
             # Coin image from kenney.nl
-            coin = Coin("/Users/catalynott/Desktop/Python/Pythoneers/Pythoneers/honey.png", SPRITE_SCALING / 3)
+            coin = Coin("honey.png", SPRITE_SCALING / 3)
 
             # Position the center of the circle the coin will orbit
             coin.circle_center_x = random.randrange(SCREEN_WIDTH)
