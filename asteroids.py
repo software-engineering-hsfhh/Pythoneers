@@ -17,6 +17,7 @@ from typing import cast
 
 STARTING_ASTEROID_COUNT = 3
 SCALE = 0.5
+SPRITE_SCALING = 0.6 #for collecting items
 OFFSCREEN_SPACE = 0
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -26,6 +27,63 @@ RIGHT_LIMIT = SCREEN_WIDTH + OFFSCREEN_SPACE
 BOTTOM_LIMIT = -OFFSCREEN_SPACE
 TOP_LIMIT = SCREEN_HEIGHT + OFFSCREEN_SPACE
 
+#Introduction view
+class InstructionView(arcade.View):
+    """ View to show instructions """
+
+    def __init__(self):
+        """ This is run once when we switch to this view """
+        super().__init__()
+        self.texture = arcade.load_texture("/Users/catalynott/Desktop/Python/Pythoneers/Try/Trump2.png")
+
+        # Reset the viewport, necessary if we have a scrolling game and we need
+        # to reset the viewport back to the start so we can see what we draw.
+        arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
+
+    def on_draw(self):
+        """ Draw this view """
+        arcade.start_render()
+        self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                                SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        """ If the user presses the mouse button, start the game. """
+        game_view = GameView()
+        game_view.start_new_game()
+        self.window.show_view(game_view)
+
+#for collecting items
+class Coin(arcade.Sprite):
+
+    def __init__(self, filename, sprite_scaling):
+        """ Constructor. """
+        # Call the parent class (Sprite) constructor
+        super().__init__(filename, sprite_scaling)
+
+        # Current angle in radians
+        self.circle_angle = 0
+
+        # How far away from the center to orbit, in pixels
+        self.circle_radius = 0
+
+        # How fast to orbit, in radians per frame
+        self.circle_speed = 0.008
+
+        # Set the center of the point we will orbit around
+        self.circle_center_x = 0
+        self.circle_center_y = 0
+
+    def update(self):
+
+        """ Update the ball's position. """
+        # Calculate a new x, y
+        self.center_x = self.circle_radius * math.sin(self.circle_angle) \
+            + self.circle_center_x
+        self.center_y = self.circle_radius * math.cos(self.circle_angle) \
+            + self.circle_center_y
+
+        # Increase the angle in prep for the next round.
+        self.circle_angle += self.circle_speed
 
 class TurningSprite(arcade.Sprite):
     """ Sprite that sets its angle to the direction it is traveling in. """
@@ -138,13 +196,21 @@ class AsteroidSprite(arcade.Sprite):
         if self.center_y < BOTTOM_LIMIT:
             self.center_y = TOP_LIMIT
 
+#change MyGame Window to View for the Introduction View
+#class MyGame(arcade.Window):
+#    """ Main application class. """
 
-class MyGame(arcade.Window):
-    """ Main application class. """
+#    def __init__(self):
+#        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+#        self.total_time = 0.0
+
+class GameView(arcade.View):
+    """ Our custom Window Class"""
 
     def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-        self.total_time = 0.0
+        """ Initializer """
+        # Call the parent class initializer
+        super().__init__()
 
         # Set the working directory (where we expect to find files) to the same
         # directory this .py file is in. You can leave this out of your own
@@ -161,11 +227,15 @@ class MyGame(arcade.Window):
         self.asteroid_list = arcade.SpriteList()
         self.bullet_list = arcade.SpriteList()
         self.ship_life_list = arcade.SpriteList()
+        self.coin_list = arcade.SpriteList() #for collection items
+        self.all_sprites_list = arcade.SpriteList() #for collection items
 
         # Set up the player
         self.score = 0
         self.player_sprite = None
         self.lives = 3
+        self.coin_list = None #for collection items
+        self.all_sprites_list = None #for collecting items
 
         # Sounds
         Background_Music = arcade.load_sound(":resources:music/1918.mp3")
@@ -178,8 +248,9 @@ class MyGame(arcade.Window):
         self.hit_sound4 = arcade.load_sound(":resources:sounds/hit2.wav")
 
 
-        #Mouse Invisible /JD
-        self.set_mouse_visible(False)
+        #change Mouse Invisible /JD for the Introduction View
+        #self.set_mouse_visible(False)
+        self.window.set_mouse_visible(False)
 
         #Background
         self.background = None
@@ -201,12 +272,15 @@ class MyGame(arcade.Window):
         self.asteroid_list = arcade.SpriteList()
         self.bullet_list = arcade.SpriteList()
         self.ship_life_list = arcade.SpriteList()
+        self.all_sprites_list = arcade.SpriteList() #for collecting items
+        self.coin_list = arcade.SpriteList() # for collecting items
 
         # Set up the player
         self.score = 0
         self.player_sprite = ShipSprite(":resources:images/space_shooter/playerShip2_orange.png", SCALE)
         self.player_sprite_list.append(self.player_sprite)
         self.lives = 3
+        self.all_sprites_list.append(self.player_sprite) # for collecting items
 ###################################################################################################################
         # ToDo: Set up the little icons that represent the player lives.
         cur_pos = 8
@@ -217,6 +291,31 @@ class MyGame(arcade.Window):
             cur_pos += life.width
             self.ship_life_list.append(life)
 ########################################################################################################
+
+        # for collecting items
+        for i in range(50):
+            # Create the coin instance
+            # Coin image from kenney.nl
+            coin = Coin(":resources:images/items/coinGold.png", SPRITE_SCALING / 3)
+
+            # Position the center of the circle the coin will orbit
+            coin.circle_center_x = random.randrange(SCREEN_WIDTH)
+            coin.circle_center_y = random.randrange(SCREEN_HEIGHT)
+
+            # Random radius from 10 to 200
+            coin.circle_radius = random.randrange(10, 200)
+
+            # Random start angle from 0 to 2pi
+            coin.circle_angle = random.random() * 2 * math.pi
+
+            # Add the coin to the lists
+            self.all_sprites_list.append(coin)
+            self.coin_list.append(coin)
+
+
+
+
+
         # Make the asteroids
         image_list = (":resources:images/space_shooter/meteorGrey_big1.png",
                       ":resources:images/space_shooter/meteorGrey_big2.png",
@@ -256,6 +355,9 @@ class MyGame(arcade.Window):
         self.ship_life_list.draw()
         self.bullet_list.draw()
         self.player_sprite_list.draw()
+        self.coin_list.draw() # for collecting items
+        self.all_sprites_list.draw() # for collecting items
+
         # Put the text on the screen.
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 70, arcade.color.WHITE, 13)
@@ -376,6 +478,18 @@ class MyGame(arcade.Window):
     def on_update(self, x):
         """ Move everything """
 
+        # for collecting items
+        self.coin_list.update()
+
+        # Generate a list of all sprites that collided with the player.
+        hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.coin_list)
+
+        # Loop through each colliding sprite, remove it, and add to the score.
+        for coin in hit_list:
+            coin.remove_from_sprite_lists()
+            self.score += 1
+
+
         self.frame_count += 1
 
         if not self.game_over:
@@ -448,6 +562,13 @@ def main():
     window.start_new_game()
     arcade.run()
 
+def main():
+    """ Main method """
+
+    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    start_view = InstructionView()
+    window.show_view(start_view)
+    arcade.run()
 
 if __name__ == "__main__":
     main()
