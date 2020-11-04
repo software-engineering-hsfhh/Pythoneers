@@ -390,7 +390,7 @@ class GameView(arcade.View):
 
         # Schießen Waffe 2
         if not self.player_sprite.respawning and symbol == arcade.key.D:
-            bullet_sprite = TurningSprite("Cilit.png", SCALE_CILIT, turn_left(float = 90))
+            bullet_sprite = TurningSprite("Cilit2.png", SCALE_CILIT)
             bullet_speed = 3
             bullet_sprite.change_y = \
                 math.cos(math.radians(self.player_sprite.angle)) * bullet_speed
