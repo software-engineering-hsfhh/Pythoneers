@@ -1,5 +1,5 @@
 """
-Asteroid Smasher V 1.1
+Asteroid Smasher
 
 Shoot space rocks in this demo program created with
 Python and the Arcade library.
@@ -283,7 +283,8 @@ class GameView(arcade.View):
         self.player_sprite_list.append(self.player_sprite)
         self.lives = 3
         self.all_sprites_list.append(self.player_sprite) # for collecting items
-###################################################################################################################
+
+
         # ToDo: Set up the little icons that represent the player lives.
         cur_pos = 8
         for i in range(self.lives):
@@ -292,7 +293,8 @@ class GameView(arcade.View):
             life.center_y = life.height
             cur_pos += life.width
             self.ship_life_list.append(life)
-########################################################################################################
+
+
 
         # for collecting items
         for i in range(50):
@@ -313,8 +315,6 @@ class GameView(arcade.View):
             # Add the coin to the lists
             self.all_sprites_list.append(coin)
             self.coin_list.append(coin)
-
-
 
 
 
@@ -350,7 +350,7 @@ class GameView(arcade.View):
         # Draw the background texture
         #arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
-################################################################################################################
+
 
         # Draw all the sprites.
         self.asteroid_list.draw()
@@ -366,7 +366,7 @@ class GameView(arcade.View):
 
         output = f"Asteroid Count: {len(self.asteroid_list)}"
         arcade.draw_text(output, 10, 50, arcade.color.WHITE, 13)
-################################################################################################################
+
 # Schießen Waffe 1
     def on_key_press(self, symbol, modifiers):
         """ Called whenever a key is pressed. """
@@ -390,7 +390,7 @@ class GameView(arcade.View):
 
         # Schießen Waffe 2
         if not self.player_sprite.respawning and symbol == arcade.key.D:
-            bullet_sprite = TurningSprite("Cilit.png", SCALE_CILIT)
+            bullet_sprite = TurningSprite("Cilit.png", SCALE_CILIT, turn_left(float = 90))
             bullet_speed = 3
             bullet_sprite.change_y = \
                 math.cos(math.radians(self.player_sprite.angle)) * bullet_speed
