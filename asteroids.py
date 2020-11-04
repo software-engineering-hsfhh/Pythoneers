@@ -34,7 +34,7 @@ class InstructionView(arcade.View):
     def __init__(self):
         """ This is run once when we switch to this view """
         super().__init__()
-        self.texture = arcade.load_texture("/Users/catalynott/Desktop/Python/Pythoneers/Try/Trump2.png")
+        self.texture = arcade.load_texture("Trump2.png")
 
         # Reset the viewport, necessary if we have a scrolling game and we need
         # to reset the viewport back to the start so we can see what we draw.
