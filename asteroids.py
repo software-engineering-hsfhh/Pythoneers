@@ -20,8 +20,8 @@ SCALE = 0.5
 SCALE_CILIT = 0.1
 SPRITE_SCALING = 0.6 #for collecting items
 OFFSCREEN_SPACE = 0
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1380
+SCREEN_HEIGHT = 800
 SCREEN_TITLE = "Asteroid Smasher - created by Pythoneers"
 LEFT_LIMIT = -OFFSCREEN_SPACE
 RIGHT_LIMIT = SCREEN_WIDTH + OFFSCREEN_SPACE
@@ -585,7 +585,7 @@ def main():
 def main():
     """ Main method """
 
-    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, fullscreen=True)
     start_view = InstructionView()
     window.show_view(start_view)
     arcade.run()
