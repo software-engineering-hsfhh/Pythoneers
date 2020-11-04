@@ -17,6 +17,7 @@ from typing import cast
 
 STARTING_ASTEROID_COUNT = 3
 SCALE = 0.5
+SCALE_CILIT = 0.1
 SPRITE_SCALING = 0.6 #for collecting items
 OFFSCREEN_SPACE = 0
 SCREEN_WIDTH = 800
@@ -242,6 +243,7 @@ class GameView(arcade.View):
         arcade.play_sound(Background_Music, 0.05)
 
         self.laser_sound = arcade.load_sound(":resources:sounds/hurt5.wav")
+        self.laser2_sound= arcade.load_sound(":resources:sounds/fall1.wav")
         self.hit_sound1 = arcade.load_sound(":resources:sounds/explosion1.wav")
         self.hit_sound2 = arcade.load_sound(":resources:sounds/explosion2.wav")
         self.hit_sound3 = arcade.load_sound(":resources:sounds/hit1.wav")
@@ -365,9 +367,10 @@ class GameView(arcade.View):
         output = f"Asteroid Count: {len(self.asteroid_list)}"
         arcade.draw_text(output, 10, 50, arcade.color.WHITE, 13)
 ################################################################################################################
+# Schießen Waffe 1
     def on_key_press(self, symbol, modifiers):
         """ Called whenever a key is pressed. """
-        if not self.player_sprite.respawning and symbol == arcade.key.SPACE:
+        if not self.player_sprite.respawning and symbol == arcade.key.A:
             bullet_sprite = TurningSprite(":resources:images/space_shooter/laserBlue01.png", SCALE)
             bullet_sprite.guid = "Bullet"
             bullet_speed = 50
@@ -384,6 +387,23 @@ class GameView(arcade.View):
             self.bullet_list.append(bullet_sprite)
 
             arcade.play_sound(self.laser_sound, 0.03)
+
+        # Schießen Waffe 2
+        if not self.player_sprite.respawning and symbol == arcade.key.D:
+            bullet_sprite = TurningSprite("Cilit.png", SCALE_CILIT)
+            bullet_speed = 3
+            bullet_sprite.change_y = \
+                math.cos(math.radians(self.player_sprite.angle)) * bullet_speed
+            bullet_sprite.change_x = \
+                -math.sin(math.radians(self.player_sprite.angle)) \
+                * bullet_speed
+
+            bullet_sprite.center_x = self.player_sprite.center_x
+            bullet_sprite.center_y = self.player_sprite.center_y
+            bullet_sprite.update()
+
+            self.bullet_list.append(bullet_sprite)
+            arcade.play_sound(self.laser2_sound, 0.02)
 
         if symbol == arcade.key.LEFT:
             self.player_sprite.change_angle = 3
