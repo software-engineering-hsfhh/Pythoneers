@@ -372,7 +372,6 @@ class GameView(arcade.View):
         """ Called whenever a key is pressed. """
         if not self.player_sprite.respawning and symbol == arcade.key.A:
             bullet_sprite = TurningSprite(":resources:images/space_shooter/laserBlue01.png", SCALE)
-            bullet_sprite.guid = "Bullet"
             bullet_speed = 50
             bullet_sprite.change_y = \
                 math.cos(math.radians(self.player_sprite.angle)) * bullet_speed
@@ -413,6 +412,10 @@ class GameView(arcade.View):
             self.player_sprite.thrust = 0.15
         elif symbol == arcade.key.DOWN:
             self.player_sprite.thrust = -.2
+        elif symbol == arcade.key.ESCAPE:
+                # pass self, the current view, to preserve this view's state
+            pause = PauseView(self)
+            self.window.show_view(pause)
 
     def on_key_release(self, symbol, modifiers):
         """ Called whenever a key is released. """
@@ -551,41 +554,66 @@ class GameView(arcade.View):
                         print("Du Lappen hast zu viele Unfälle gebaut... Game Over")
 
 
-class GameOverView(arcade.View):
-        """ View to show when game is over """
 
-        def __init__(self):
-            """ This is run once when we switch to this view """
-            super().__init__()
-            self.texture = arcade.load_texture("game_over.png")
+class PauseView(arcade.View):
+    def __init__(self, game_view):
+        super().__init__()
+        self.game_view = game_view
 
-            # Reset the viewport, necessary if we have a scrolling game and we need
-            # to reset the viewport back to the start so we can see what we draw.
-            arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
+    def on_show(self):
+        arcade.set_background_color(arcade.color.DARK_VANILLA)
 
-        def on_draw(self):
-            """ Draw this view """
-            arcade.start_render()
-            self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                                    SCREEN_WIDTH, SCREEN_HEIGHT)
+    def on_draw(self):
+        arcade.start_render()
 
-        def on_mouse_press(self, _x, _y, _button, _modifiers):
-            """ If the user presses the mouse button, re-start the game. """
-            game_view = GameView()
-            game_view.setup()
-            self.window.show_view(game_view)
+        # Draw player, for effect, on pause screen.
+        # The previous View (GameView) was passed in
+        # and saved in self.game_view.
+        player_sprite = self.game_view.player_sprite
+        player_sprite.draw()
+
+        # draw an filter over him
+        arcade.draw_lrtb_rectangle_filled(left=player_sprite.left,
+                                          right=player_sprite.right,
+                                          top=player_sprite.top,
+                                          bottom=player_sprite.bottom,
+                                          color=arcade.color.DARK_VANILLA + (200,))
+
+        arcade.draw_text("PAUSED", SCREEN_WIDTH/2, SCREEN_HEIGHT/2+50,
+                         arcade.color.BLACK, font_size=50, anchor_x="center")
+
+        # Show tip to return or reset
+        arcade.draw_text("Press Esc. to return",
+                         SCREEN_WIDTH/2,
+                         SCREEN_HEIGHT/2,
+                         arcade.color.BLACK,
+                         font_size=20,
+                         anchor_x="center")
+        """arcade.draw_text("Press Enter to reset",
+                         SCREEN_WIDTH/2,
+                         SCREEN_HEIGHT/2-30,
+                         arcade.color.BLACK,
+                         font_size=20,
+                         anchor_x="center")"""
+
+    def on_key_press(self, key, _modifiers):
+        if key == arcade.key.ESCAPE:   # resume game
+            self.window.show_view(self.game_view)
+        """elif key == arcade.key.ENTER:  # reset game
+            MyGame = GameView()
+            self.window.show_view(game_view)"""
 
 
 def main():
     """ Start the game """
     window = MyGame()
     window.start_new_game()
-    arcade.run()
+
 
 def main():
     """ Main method """
 
-    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, fullscreen=True)
+    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, fullscreen= False)
     start_view = InstructionView()
     window.show_view(start_view)
     arcade.run()
