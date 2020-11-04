@@ -144,7 +144,7 @@ class MyGame(arcade.Window):
 
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-        self.total_time = 0.0
+        self.total_time = 0.0 #Dauer der Spielzeit
 
         # Set the working directory (where we expect to find files) to the same
         # directory this .py file is in. You can leave this out of your own
@@ -179,11 +179,11 @@ class MyGame(arcade.Window):
 
 
         #Mouse Invisible /JD
-        self.set_mouse_visible(False)
+        self.set_mouse_visible(False) #Mauszeiger im Spiel nicht sichtbar!
 
         #Background
         self.background = None
-        arcade.set_background_color(arcade.color.DARK_VANILLA)
+
 
     def setup(self):
         self.background = arcade.load_texture(":resources:images/backgrounds/abstract_1.jpg")
@@ -204,10 +204,10 @@ class MyGame(arcade.Window):
 
         # Set up the player
         self.score = 0
-        self.player_sprite = ShipSprite(":resources:images/space_shooter/playerShip2_orange.png", SCALE)
+        self.player_sprite = ShipSprite(":resources:images/enemies/bee.png", SCALE )
         self.player_sprite_list.append(self.player_sprite)
         self.lives = 3
-###################################################################################################################
+
         # ToDo: Set up the little icons that represent the player lives.
         cur_pos = 8
         for i in range(self.lives):
@@ -216,7 +216,7 @@ class MyGame(arcade.Window):
             life.center_y = life.height
             cur_pos += life.width
             self.ship_life_list.append(life)
-########################################################################################################
+
         # Make the asteroids
         image_list = (":resources:images/space_shooter/meteorGrey_big1.png",
                       ":resources:images/space_shooter/meteorGrey_big2.png",
@@ -249,7 +249,7 @@ class MyGame(arcade.Window):
         # Draw the background texture
         #arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
-################################################################################################################
+
 
         # Draw all the sprites.
         self.asteroid_list.draw()
@@ -262,7 +262,8 @@ class MyGame(arcade.Window):
 
         output = f"Asteroid Count: {len(self.asteroid_list)}"
         arcade.draw_text(output, 10, 50, arcade.color.WHITE, 13)
-################################################################################################################
+
+
     def on_key_press(self, symbol, modifiers):
         """ Called whenever a key is pressed. """
         if not self.player_sprite.respawning and symbol == arcade.key.SPACE:
@@ -378,6 +379,7 @@ class MyGame(arcade.Window):
 
         self.frame_count += 1
 
+
         if not self.game_over:
             self.asteroid_list.update()
             self.bullet_list.update()
@@ -415,6 +417,7 @@ class MyGame(arcade.Window):
                     else:
                         self.game_over = True
                         print("Du Lappen hast zu viele Unfälle gebaut... Game Over")
+
 
 
 class GameOverView(arcade.View):
