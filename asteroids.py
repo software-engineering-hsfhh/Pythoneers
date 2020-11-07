@@ -47,11 +47,12 @@ class InstructionView(arcade.View):
         self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                                 SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        """ If the user presses the mouse button, start the game. """
-        game_view = GameView()
-        game_view.start_new_game()
-        self.window.show_view(game_view)
+    def on_key_press(self, symbol, modifiers):
+        """ If the user presses ENTER, start the game. """
+        if symbol == arcade.key.ENTER:
+            game_view = GameView()
+            game_view.start_new_game()
+            self.window.show_view(game_view)
 
 #for collecting items
 class Coin(arcade.Sprite):
@@ -625,11 +626,12 @@ class GameOverView(arcade.View):
         self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                                 SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        """ If the user presses the mouse button, re-start the game. """
-        game_view = GameView()
-        game_view.start_new_game()
-        self.window.show_view(game_view)
+    def on_key_press(self, symbol, modifiers):
+        """ If the user presses ENTER, start the game. """
+        if symbol == arcade.key.ENTER:
+            game_view = GameView()
+            game_view.start_new_game()
+            self.window.show_view(game_view)
 
 def main():
     """ Start the game """
