@@ -392,10 +392,10 @@ class GameView(arcade.View):
             bullet_sprite = TurningSprite("Cilit2.png", SCALE_CILIT)
             bullet_speed = 3
             bullet_sprite.change_y = \
-                math.cos(math.radians(self.player_sprite.angle)) * bullet_speed
+                math.cos(math.radians(self.player_sprite.angle)) * -bullet_speed
             bullet_sprite.change_x = \
                 -math.sin(math.radians(self.player_sprite.angle)) \
-                * bullet_speed
+                * -bullet_speed
 
             bullet_sprite.center_x = self.player_sprite.center_x
             bullet_sprite.center_y = self.player_sprite.center_y
