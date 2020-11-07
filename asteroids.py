@@ -239,7 +239,7 @@ class GameView(arcade.View):
         self.all_sprites_list = None #for collecting items
 
         # Sounds
-        Background_Music = arcade.load_sound(":resources:music/1918.mp3")
+        Background_Music = arcade.load_sound("Trump.mp3")
         arcade.play_sound(Background_Music, 0.05)
 
         self.laser_sound = arcade.load_sound(":resources:sounds/hurt5.wav")
