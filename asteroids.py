@@ -412,7 +412,7 @@ class GameView(arcade.View):
             self.player_sprite.thrust = 0.15
         elif symbol == arcade.key.DOWN:
             self.player_sprite.thrust = -.2
-        elif symbol == arcade.key.ESCAPE:
+        elif symbol == arcade.key.P:
                 # pass self, the current view, to preserve this view's state
             pause = PauseView(self)
             self.window.show_view(pause)
@@ -565,7 +565,7 @@ class PauseView(arcade.View):
         self.game_view = game_view
 
     def on_show(self):
-        arcade.set_background_color(arcade.color.DARK_VANILLA)
+        arcade.set_background_color(arcade.color.LIGHT_BLUE)
 
     def on_draw(self):
         arcade.start_render()
@@ -581,7 +581,7 @@ class PauseView(arcade.View):
                                           right=player_sprite.right,
                                           top=player_sprite.top,
                                           bottom=player_sprite.bottom,
-                                          color=arcade.color.DARK_VANILLA + (200,))
+                                          color=arcade.color.LIGHT_BLUE + (200,))
 
         arcade.draw_text("PAUSED", SCREEN_WIDTH/2, SCREEN_HEIGHT/2+50,
                          arcade.color.BLACK, font_size=50, anchor_x="center")
