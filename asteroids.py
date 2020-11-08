@@ -17,8 +17,8 @@ from typing import cast
 
 STARTING_ASTEROID_COUNT = 3
 SCALE = 0.5
-SCALE_CILIT = 0.1
-SPRITE_SCALING = 0.6 #for collecting items
+SCALE_CILIT = 0.2
+SPRITE_SCALING = 0.3 #for collecting items
 OFFSCREEN_SPACE = 0
 SCREEN_WIDTH = 1380
 SCREEN_HEIGHT = 800
@@ -35,7 +35,7 @@ class InstructionView(arcade.View):
     def __init__(self):
         """ This is run once when we switch to this view """
         super().__init__()
-        self.texture = arcade.load_texture("Trump2.png")
+        self.texture = arcade.load_texture("Intro.png")
 
         # Reset the viewport, necessary if we have a scrolling game and we need
         # to reset the viewport back to the start so we can see what we draw.
@@ -53,6 +53,7 @@ class InstructionView(arcade.View):
             game_view = GameView()
             game_view.start_new_game()
             self.window.show_view(game_view)
+
 
 #for collecting items
 class Coin(arcade.Sprite):
@@ -198,6 +199,7 @@ class AsteroidSprite(arcade.Sprite):
         if self.center_y < BOTTOM_LIMIT:
             self.center_y = TOP_LIMIT
 
+
 #change MyGame Window to View for the Introduction View
 #class MyGame(arcade.Window):
 #    """ Main application class. """
@@ -250,19 +252,17 @@ class GameView(arcade.View):
         self.hit_sound3 = arcade.load_sound(":resources:sounds/hit1.wav")
         self.hit_sound4 = arcade.load_sound(":resources:sounds/hit2.wav")
 
-
         #change Mouse Invisible /JD for the Introduction View
         #self.set_mouse_visible(False)
         self.window.set_mouse_visible(False)
 
         #Background
         self.background = None
-        arcade.set_background_color(arcade.color.DARK_VANILLA)
+        arcade.set_background_color(arcade.color.LIGHT_BLUE)
 
     def setup(self):
         self.background = arcade.load_texture(":resources:images/backgrounds/abstract_1.jpg")
         self.total_time = 0.0
-
 
     def start_new_game(self):
         """ Set up the game and initialize the variables. """
@@ -296,12 +296,10 @@ class GameView(arcade.View):
             self.ship_life_list.append(life)
 
 
-
         # for collecting items
         for i in range(50):
             # Create the coin instance
-            # Coin image from kenney.nl
-            coin = Coin(":resources:images/items/coinGold.png", SPRITE_SCALING / 3)
+            coin = Coin("Flag.png", SPRITE_SCALING / 3)
 
             # Position the center of the circle the coin will orbit
             coin.circle_center_x = random.randrange(SCREEN_WIDTH)
@@ -320,10 +318,10 @@ class GameView(arcade.View):
 
 
         # Make the asteroids
-        image_list = (":resources:images/space_shooter/meteorGrey_big1.png",
-                      ":resources:images/space_shooter/meteorGrey_big2.png",
-                      ":resources:images/space_shooter/meteorGrey_big3.png",
-                      ":resources:images/space_shooter/meteorGrey_big4.png")
+        image_list = ("Trump_sprite.png",
+                      "Trump_sprite.png",
+                      "Trump_sprite.png",
+                      "Trump_sprite.png")
 
         for i in range(STARTING_ASTEROID_COUNT):
             image_no = random.randrange(4)
@@ -361,6 +359,7 @@ class GameView(arcade.View):
         self.coin_list.draw() # for collecting items
         self.all_sprites_list.draw() # for collecting items
 
+
         # Put the text on the screen.
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 70, arcade.color.WHITE, 13)
@@ -390,7 +389,7 @@ class GameView(arcade.View):
 
         # Schießen Waffe 2
         if not self.player_sprite.respawning and symbol == arcade.key.D:
-            bullet_sprite = TurningSprite("Cilit2.png", SCALE_CILIT)
+            bullet_sprite = TurningSprite("vote.png", SCALE_CILIT)
             bullet_speed = 3
             bullet_sprite.change_y = \
                 math.cos(math.radians(self.player_sprite.angle)) * -bullet_speed
@@ -438,8 +437,8 @@ class GameView(arcade.View):
         if asteroid.size == 4:
             for i in range(3):
                 image_no = random.randrange(2)
-                image_list = [":resources:images/space_shooter/meteorGrey_med1.png",
-                              ":resources:images/space_shooter/meteorGrey_med1.png"]
+                image_list = ["twitter.png",
+                              "twitter.png"]
 
                 enemy_sprite = AsteroidSprite(image_list[image_no],
                                               SCALE * 1.5)
@@ -458,8 +457,8 @@ class GameView(arcade.View):
         elif asteroid.size == 3:
             for i in range(3):
                 image_no = random.randrange(2)
-                image_list = [":resources:images/space_shooter/meteorGrey_med2.png",
-                              ":resources:images/space_shooter/meteorGrey_med2.png"]
+                image_list = ["twitter.png",
+                              "twitter.png"]
 
                 enemy_sprite = AsteroidSprite(image_list[image_no],
                                               SCALE * 1.5)
@@ -478,8 +477,8 @@ class GameView(arcade.View):
         elif asteroid.size == 2:
             for i in range(3):
                 image_no = random.randrange(2)
-                image_list = [":resources:images/space_shooter/meteorGrey_small1.png",
-                              ":resources:images/space_shooter/meteorGrey_small1.png"]
+                image_list = ["fake.png",
+                              "fake.png"]
 
                 enemy_sprite = AsteroidSprite(image_list[image_no],
                                               SCALE * 1.5)
@@ -512,6 +511,7 @@ class GameView(arcade.View):
         for coin in hit_list:
             coin.remove_from_sprite_lists()
             self.score += 1
+
 
         self.frame_count += 1
 
@@ -614,7 +614,7 @@ class GameOverView(arcade.View):
     def __init__(self):
         """ This is run once when we switch to this view """
         super().__init__()
-        self.texture = arcade.load_texture("GameOver.png")
+        self.texture = arcade.load_texture("GameOverTrump.png")
 
         # Reset the viewport, necessary if we have a scrolling game and we need
         # to reset the viewport back to the start so we can see what we draw.
@@ -633,6 +633,7 @@ class GameOverView(arcade.View):
             game_view.start_new_game()
             self.window.show_view(game_view)
 
+
 def main():
     """ Start the game """
     window = MyGame()
@@ -641,7 +642,6 @@ def main():
 
 def main():
     """ Main method """
-
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, fullscreen= False)
     start_view = InstructionView()
     window.show_view(start_view)
