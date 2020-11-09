@@ -35,7 +35,7 @@ class InstructionView(arcade.View):
     def __init__(self):
         """ This is run once when we switch to this view """
         super().__init__()
-        self.texture = arcade.load_texture("Intro.png")
+        self.texture = arcade.load_texture("Images/Intro.png")
 
         # Reset the viewport, necessary if we have a scrolling game and we need
         # to reset the viewport back to the start so we can see what we draw.
@@ -242,7 +242,7 @@ class GameView(arcade.View):
         self.all_sprites_list = None #for collecting items
 
         # Sounds
-        Background_Music = arcade.load_sound("Trump.mp3")
+        Background_Music = arcade.load_sound("Images/Trump.mp3")
         arcade.play_sound(Background_Music, 0.05)
 
         self.laser_sound = arcade.load_sound(":resources:sounds/hurt5.wav")
@@ -299,7 +299,7 @@ class GameView(arcade.View):
         # for collecting items
         for i in range(50):
             # Create the coin instance
-            coin = Coin("Flag.png", SPRITE_SCALING / 3)
+            coin = Coin("Images/Flag.png", SPRITE_SCALING / 3)
 
             # Position the center of the circle the coin will orbit
             coin.circle_center_x = random.randrange(SCREEN_WIDTH)
@@ -318,10 +318,10 @@ class GameView(arcade.View):
 
 
         # Make the asteroids
-        image_list = ("Trump_sprite.png",
-                      "Trump_sprite.png",
-                      "Trump_sprite.png",
-                      "Trump_sprite.png")
+        image_list = ("Images/Trump_sprite.png",
+                      "Images/Trump_sprite.png",
+                      "Images/Trump_sprite.png",
+                      "Images/Trump_sprite.png")
 
         for i in range(STARTING_ASTEROID_COUNT):
             image_no = random.randrange(4)
@@ -389,7 +389,7 @@ class GameView(arcade.View):
 
         # Schießen Waffe 2
         if not self.player_sprite.respawning and symbol == arcade.key.D:
-            bullet_sprite = TurningSprite("vote.png", SCALE_CILIT)
+            bullet_sprite = TurningSprite("Images/vote.png", SCALE_CILIT)
             bullet_speed = 3
             bullet_sprite.change_y = \
                 math.cos(math.radians(self.player_sprite.angle)) * -bullet_speed
@@ -437,8 +437,8 @@ class GameView(arcade.View):
         if asteroid.size == 4:
             for i in range(3):
                 image_no = random.randrange(2)
-                image_list = ["twitter.png",
-                              "twitter.png"]
+                image_list = ["Images/twitter.png",
+                              "Images/twitter.png"]
 
                 enemy_sprite = AsteroidSprite(image_list[image_no],
                                               SCALE * 1.5)
@@ -457,8 +457,8 @@ class GameView(arcade.View):
         elif asteroid.size == 3:
             for i in range(3):
                 image_no = random.randrange(2)
-                image_list = ["twitter.png",
-                              "twitter.png"]
+                image_list = ["Images/twitter.png",
+                              "Images/twitter.png"]
 
                 enemy_sprite = AsteroidSprite(image_list[image_no],
                                               SCALE * 1.5)
@@ -477,8 +477,8 @@ class GameView(arcade.View):
         elif asteroid.size == 2:
             for i in range(3):
                 image_no = random.randrange(2)
-                image_list = ["fake.png",
-                              "fake.png"]
+                image_list = ["Images/fake.png",
+                              "Images/fake.png"]
 
                 enemy_sprite = AsteroidSprite(image_list[image_no],
                                               SCALE * 1.5)
@@ -614,7 +614,7 @@ class GameOverView(arcade.View):
     def __init__(self):
         """ This is run once when we switch to this view """
         super().__init__()
-        self.texture = arcade.load_texture("GameOverTrump.png")
+        self.texture = arcade.load_texture("Images/GameOverTrump.png")
 
         # Reset the viewport, necessary if we have a scrolling game and we need
         # to reset the viewport back to the start so we can see what we draw.
