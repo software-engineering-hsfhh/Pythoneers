@@ -18,7 +18,9 @@ from typing import cast
 STARTING_ASTEROID_COUNT = 3
 SCALE = 0.5
 SCALE_CILIT = 0.2
-SPRITE_SCALING = 0.3 #for collecting items
+ITEM_COUNT = 30
+SCALE_ITEM = 0.1
+SCALE_LIVES = 1.0
 OFFSCREEN_SPACE = 0
 SCREEN_WIDTH = 1380
 SCREEN_HEIGHT = 800
@@ -28,7 +30,8 @@ RIGHT_LIMIT = SCREEN_WIDTH + OFFSCREEN_SPACE
 BOTTOM_LIMIT = -OFFSCREEN_SPACE
 TOP_LIMIT = SCREEN_HEIGHT + OFFSCREEN_SPACE
 
-#Introduction view
+
+#Instruction view
 class InstructionView(arcade.View):
     """ View to show instructions """
 
@@ -56,37 +59,26 @@ class InstructionView(arcade.View):
 
 
 #for collecting items
-class Coin(arcade.Sprite):
+class Item(arcade.Sprite):
+    """
+    This class represents the items on our screen. It is a child class of
+    the arcade library's "Sprite" class.
+    """
 
-    def __init__(self, filename, sprite_scaling):
-        """ Constructor. """
-        # Call the parent class (Sprite) constructor
-        super().__init__(filename, sprite_scaling)
-
-        # Current angle in radians
-        self.circle_angle = 0
-
-        # How far away from the center to orbit, in pixels
-        self.circle_radius = 0
-
-        # How fast to orbit, in radians per frame
-        self.circle_speed = 0.008
-
-        # Set the center of the point we will orbit around
-        self.circle_center_x = 0
-        self.circle_center_y = 0
+    def reset_pos(self):
+        # Reset the item to a random spot above the screen
+        self.center_y = random.randrange(SCREEN_HEIGHT + 20,
+                                         SCREEN_HEIGHT + 100)
+        self.center_x = random.randrange(SCREEN_WIDTH)
 
     def update(self):
+        # Move the item
+        self.center_y -= 1
 
-        """ Update the ball's position. """
-        # Calculate a new x, y
-        self.center_x = self.circle_radius * math.sin(self.circle_angle) \
-            + self.circle_center_x
-        self.center_y = self.circle_radius * math.cos(self.circle_angle) \
-            + self.circle_center_y
-
-        # Increase the angle in prep for the next round.
-        self.circle_angle += self.circle_speed
+        # See if the item has fallen off the bottom of the screen.
+        # If so, reset it.
+        if self.top < 0:
+            self.reset_pos()
 
 class TurningSprite(arcade.Sprite):
     """ Sprite that sets its angle to the direction it is traveling in. """
@@ -201,13 +193,6 @@ class AsteroidSprite(arcade.Sprite):
 
 
 #change MyGame Window to View for the Introduction View
-#class MyGame(arcade.Window):
-#    """ Main application class. """
-
-#    def __init__(self):
-#        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-#        self.total_time = 0.0
-
 class GameView(arcade.View):
     """ Our custom Window Class"""
 
@@ -215,13 +200,6 @@ class GameView(arcade.View):
         """ Initializer """
         # Call the parent class initializer
         super().__init__()
-
-        # Set the working directory (where we expect to find files) to the same
-        # directory this .py file is in. You can leave this out of your own
-        # code, but it is needed to easily run the examples using "python -m"
-        # as mentioned at the top of this program.
-        file_path = os.path.dirname(os.path.abspath(__file__))
-        os.chdir(file_path)
 
         self.frame_count = 0
         self.game_over = False
@@ -231,15 +209,15 @@ class GameView(arcade.View):
         self.asteroid_list = arcade.SpriteList()
         self.bullet_list = arcade.SpriteList()
         self.ship_life_list = arcade.SpriteList()
-        self.coin_list = arcade.SpriteList() #for collection items
-        self.all_sprites_list = arcade.SpriteList() #for collection items
+        self.item_list = arcade.SpriteList()
+        self.level_list = arcade.SpriteList()
 
         # Set up the player
         self.score = 0
         self.player_sprite = None
         self.lives = 3
-        self.coin_list = None #for collection items
-        self.all_sprites_list = None #for collecting items
+        self.item_list = None
+        self.level = 1
 
         # Sounds
         Background_Music = arcade.load_sound("Sound/Trump.mp3")
@@ -260,10 +238,6 @@ class GameView(arcade.View):
         self.background = None
         arcade.set_background_color(arcade.color.LIGHT_BLUE)
 
-    def setup(self):
-        self.background = arcade.load_texture(":resources:images/backgrounds/abstract_1.jpg")
-        self.total_time = 0.0
-
     def start_new_game(self):
         """ Set up the game and initialize the variables. """
 
@@ -275,46 +249,36 @@ class GameView(arcade.View):
         self.asteroid_list = arcade.SpriteList()
         self.bullet_list = arcade.SpriteList()
         self.ship_life_list = arcade.SpriteList()
-        self.all_sprites_list = arcade.SpriteList() #for collecting items
-        self.coin_list = arcade.SpriteList() # for collecting items
+        self.item_list = arcade.SpriteList()
+        self.level_list = arcade.SpriteList()
 
         # Set up the player
         self.score = 0
         self.player_sprite = ShipSprite(":resources:images/space_shooter/playerShip2_orange.png", SCALE)
         self.player_sprite_list.append(self.player_sprite)
         self.lives = 3
-        self.all_sprites_list.append(self.player_sprite) # for collecting items
-
 
         # ToDo: Set up the little icons that represent the player lives.
         cur_pos = 8
         for i in range(self.lives):
-            life = arcade.Sprite(":resources:images/space_shooter/playerLife1_orange.png", SCALE)
+            life = arcade.Sprite(":resources:images/space_shooter/playerLife1_orange.png", SCALE_LIVES)
             life.center_x = cur_pos + life.width
             life.center_y = life.height
             cur_pos += life.width
             self.ship_life_list.append(life)
 
+        # Create the items
+        for i in range(ITEM_COUNT):
 
-        # for collecting items
-        for i in range(50):
-            # Create the coin instance
-            coin = Coin("Images/Flag.png", SPRITE_SCALING / 3)
+            # Create the item instance
+            item = Item("Images/Flag.png", SCALE_ITEM)
 
-            # Position the center of the circle the coin will orbit
-            coin.circle_center_x = random.randrange(SCREEN_WIDTH)
-            coin.circle_center_y = random.randrange(SCREEN_HEIGHT)
+            # Position the item
+            item.center_x = random.randrange(SCREEN_WIDTH)
+            item.center_y = random.randrange(SCREEN_HEIGHT)
 
-            # Random radius from 10 to 200
-            coin.circle_radius = random.randrange(10, 200)
-
-            # Random start angle from 0 to 2pi
-            coin.circle_angle = random.random() * 2 * math.pi
-
-            # Add the coin to the lists
-            self.all_sprites_list.append(coin)
-            self.coin_list.append(coin)
-
+            # Add the item to the lists
+            self.item_list.append(item)
 
 
         # Make the asteroids
@@ -350,22 +314,24 @@ class GameView(arcade.View):
         #arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
 
-
         # Draw all the sprites.
         self.asteroid_list.draw()
         self.ship_life_list.draw()
         self.bullet_list.draw()
         self.player_sprite_list.draw()
-        self.coin_list.draw() # for collecting items
-        self.all_sprites_list.draw() # for collecting items
+        self.item_list.draw()
+        self.level_list.draw()
 
 
         # Put the text on the screen.
         output = f"Score: {self.score}"
-        arcade.draw_text(output, 10, 70, arcade.color.WHITE, 13)
+        arcade.draw_text(output, 10, 110, arcade.color.BLACK, 13)
 
         output = f"Asteroid Count: {len(self.asteroid_list)}"
-        arcade.draw_text(output, 10, 50, arcade.color.WHITE, 13)
+        arcade.draw_text(output, 10, 80, arcade.color.BLACK, 13)
+
+        output = f"Level: {self.level}"
+        arcade.draw_text(output, 10, 50, arcade.color.BLACK, 13)
 
 # Schießen Waffe 1
     def on_key_press(self, symbol, modifiers):
@@ -474,6 +440,7 @@ class GameView(arcade.View):
 
                 self.asteroid_list.append(enemy_sprite)
                 self.hit_sound2.play(0.01)
+
         elif asteroid.size == 2:
             for i in range(3):
                 image_no = random.randrange(2)
@@ -502,15 +469,27 @@ class GameView(arcade.View):
         """ Move everything """
 
         # for collecting items
-        self.coin_list.update()
+        self.item_list.update()
+        self.level_list.update()
 
         # Generate a list of all sprites that collided with the player.
-        hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.coin_list)
+        hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.item_list)
 
         # Loop through each colliding sprite, remove it, and add to the score.
-        for coin in hit_list:
-            coin.remove_from_sprite_lists()
+        for item in hit_list:
+            item.remove_from_sprite_lists()
             self.score += 1
+
+        # Create levels
+        if self.score == 10:
+            self.level = 2
+        if self.score == 30:
+            self.level = 3
+
+        # Show the Winner View
+        if self.level == 3:
+            view = WinnerView()
+            self.window.show_view(view)
 
 
         self.frame_count += 1
@@ -633,12 +612,36 @@ class GameOverView(arcade.View):
             game_view.start_new_game()
             self.window.show_view(game_view)
 
+#Winner View
+class WinnerView(arcade.View):
+    """ View to show when game is over """
+
+    def __init__(self):
+        """ This is run once when we switch to this view """
+        super().__init__()
+        self.texture = arcade.load_texture("Images/Winner.png")
+
+        # Reset the viewport, necessary if we have a scrolling game and we need
+        # to reset the viewport back to the start so we can see what we draw.
+        arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
+
+    def on_draw(self):
+        """ Draw this view """
+        arcade.start_render()
+        self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                                SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    def on_key_press(self, symbol, modifiers):
+        """ If the user presses ENTER, start the game. """
+        if symbol == arcade.key.ENTER:
+            game_view = GameView()
+            game_view.start_new_game()
+            self.window.show_view(game_view)
 
 def main():
     """ Start the game """
     window = MyGame()
     window.start_new_game()
-
 
 def main():
     """ Main method """
