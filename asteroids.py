@@ -1,30 +1,28 @@
 """
-Asteroid Smasher
-
-Shoot space rocks in this demo program created with
+Shoot Trump in this demo program created with
 Python and the Arcade library.
-
-Artwork from http://kenney.nl
 
 If Python and Arcade are installed, this example can be run from the command line with:
 python -m arcade.examples.asteroid_smasher
 """
+
 import random
 import math
 import arcade
 import os
 from typing import cast
 
+#define scaling
 STARTING_ASTEROID_COUNT = 3
 SCALE = 0.5
-SCALE_CILIT = 0.2
-ITEM_COUNT = 30
+SCALE_VOTE = 0.2
 SCALE_ITEM = 0.1
 SCALE_LIVES = 1.0
+ITEM_COUNT = 30
 OFFSCREEN_SPACE = 0
 SCREEN_WIDTH = 1380
 SCREEN_HEIGHT = 800
-SCREEN_TITLE = "Asteroid Smasher - created by Pythoneers"
+SCREEN_TITLE = "Trump Smasher - created by Pythoneers"
 LEFT_LIMIT = -OFFSCREEN_SPACE
 RIGHT_LIMIT = SCREEN_WIDTH + OFFSCREEN_SPACE
 BOTTOM_LIMIT = -OFFSCREEN_SPACE
@@ -60,10 +58,7 @@ class InstructionView(arcade.View):
 
 #for collecting items
 class Item(arcade.Sprite):
-    """
-    This class represents the items on our screen. It is a child class of
-    the arcade library's "Sprite" class.
-    """
+    """ This class represents the items on our screen. """
 
     def reset_pos(self):
         # Reset the item to a random spot above the screen
@@ -216,8 +211,9 @@ class GameView(arcade.View):
         self.score = 0
         self.player_sprite = None
         self.lives = 3
-        self.item_list = None
         self.level = 1
+
+        self.item_list = None
 
         # Sounds
         Background_Music = arcade.load_sound("Sound/Trump.mp3")
@@ -333,7 +329,7 @@ class GameView(arcade.View):
         output = f"Level: {self.level}"
         arcade.draw_text(output, 10, 50, arcade.color.BLACK, 13)
 
-# Schießen Waffe 1
+    # Weapon 1
     def on_key_press(self, symbol, modifiers):
         """ Called whenever a key is pressed. """
         if not self.player_sprite.respawning and symbol == arcade.key.A:
@@ -353,9 +349,9 @@ class GameView(arcade.View):
 
             arcade.play_sound(self.laser_sound, 0.03)
 
-        # Schießen Waffe 2
+        # Weapon 2
         if not self.player_sprite.respawning and symbol == arcade.key.D:
-            bullet_sprite = TurningSprite("Images/vote.png", SCALE_CILIT)
+            bullet_sprite = TurningSprite("Images/vote.png", SCALE_VOTE)
             bullet_speed = 3
             bullet_sprite.change_y = \
                 math.cos(math.radians(self.player_sprite.angle)) * -bullet_speed
