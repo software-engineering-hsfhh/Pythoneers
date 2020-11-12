@@ -258,7 +258,10 @@ class GameView(arcade.View):
         self.player_sprite_list.append(self.player_sprite)
         self.lives = 3
 
-        # ToDo: Set up the little icons that represent the player lives.
+        # icons that represent the player livesand are positioned:
+        #x-axis is equal to cursor position and width of the sprite
+        #y-Axis is equal to life height
+        #+= Adds the value of a numeric expression to the value of a numeric variable or property and assigns the result to the variable or property
         cur_pos = 8
         for i in range(self.lives):
             life = arcade.Sprite(":resources:images/space_shooter/playerLife1_orange.png", SCALE_LIVES)
@@ -323,7 +326,7 @@ class GameView(arcade.View):
         self.level_list.draw()
 
 
-        # Put the text on the screen.
+        # Put the text on the screen. #coordinates of the score/ASteroids/Level and the Color
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 110, arcade.color.BLACK, 13)
 
@@ -394,6 +397,7 @@ class GameView(arcade.View):
         elif symbol == arcade.key.DOWN:
             self.player_sprite.thrust = 0
 
+#One Point for the destruction of each Asteroid
     def split_asteroid(self, asteroid: AsteroidSprite):
         """ Split an asteroid into chunks. """
         x = asteroid.center_x
