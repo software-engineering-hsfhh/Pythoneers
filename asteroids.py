@@ -205,7 +205,7 @@ class GameView(arcade.View):
         self.bullet_list = arcade.SpriteList()
         self.ship_life_list = arcade.SpriteList()
         self.item_list = arcade.SpriteList()
-        self.level_list = arcade.SpriteList()
+#        self.level_list = arcade.SpriteList()
 
         # Set up the player
         self.score = 0
@@ -246,7 +246,7 @@ class GameView(arcade.View):
         self.bullet_list = arcade.SpriteList()
         self.ship_life_list = arcade.SpriteList()
         self.item_list = arcade.SpriteList()
-        self.level_list = arcade.SpriteList()
+#        self.level_list = arcade.SpriteList()
 
         # Set up the player
         self.score = 0
@@ -319,7 +319,7 @@ class GameView(arcade.View):
         self.bullet_list.draw()
         self.player_sprite_list.draw()
         self.item_list.draw()
-        self.level_list.draw()
+#        self.level_list.draw()
 
 
         # Put the text on the screen. #coordinates of the score/ASteroids/Level and the Color
@@ -470,7 +470,7 @@ class GameView(arcade.View):
 
         # for collecting items
         self.item_list.update()
-        self.level_list.update()
+    #    self.level_list.update()
 
         # Generate a list of all sprites that collided with the player.
         hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.item_list)
