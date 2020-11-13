@@ -335,38 +335,47 @@ class GameView(arcade.View):
     # Weapon 1
     def on_key_press(self, symbol, modifiers):
         """ Called whenever a key is pressed. """
+        # keyboard controls
         if not self.player_sprite.respawning and symbol == arcade.key.A:
+            # look
             bullet_sprite = TurningSprite(":resources:images/space_shooter/laserBlue01.png", SCALE)
+            # speed
             bullet_speed = 50
+            # in which direction the bullet flies
             bullet_sprite.change_y = \
                 math.cos(math.radians(self.player_sprite.angle)) * bullet_speed
             bullet_sprite.change_x = \
                 -math.sin(math.radians(self.player_sprite.angle)) \
                 * bullet_speed
-
+            # where the bullet starts
             bullet_sprite.center_x = self.player_sprite.center_x
             bullet_sprite.center_y = self.player_sprite.center_y
             bullet_sprite.update()
 
             self.bullet_list.append(bullet_sprite)
-
+            # sound
             arcade.play_sound(self.laser_sound, 0.03)
 
         # Weapon 2
+        # keyboard controls
         if not self.player_sprite.respawning and symbol == arcade.key.D:
+            # look
             bullet_sprite = TurningSprite("Images/vote.png", SCALE_VOTE)
+            # speed
             bullet_speed = 3
+            # in which direction the bullet flies
             bullet_sprite.change_y = \
                 math.cos(math.radians(self.player_sprite.angle)) * -bullet_speed
             bullet_sprite.change_x = \
                 -math.sin(math.radians(self.player_sprite.angle)) \
                 * -bullet_speed
-
+            # where the bullet starts
             bullet_sprite.center_x = self.player_sprite.center_x
             bullet_sprite.center_y = self.player_sprite.center_y
             bullet_sprite.update()
 
             self.bullet_list.append(bullet_sprite)
+            # sound
             arcade.play_sound(self.laser2_sound, 0.02)
 
         if symbol == arcade.key.LEFT:
