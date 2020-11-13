@@ -638,10 +638,6 @@ class WinnerView(arcade.View):
             game_view.start_new_game()
             self.window.show_view(game_view)
 
-def main():
-    """ Start the game """
-    window = MyGame()
-    window.start_new_game()
 
 def main():
     """ Main method """
