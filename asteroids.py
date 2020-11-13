@@ -539,21 +539,21 @@ class GameView(arcade.View):
 
 
 class PauseView(arcade.View):
-    def __init__(self, game_view):
-        super().__init__()
-        self.game_view = game_view
+    def __init__(self, game_view): #initialize new Objekt
+        super().__init__() #Superclass (class on "top level")
+        self.game_view = game_view #Define View
 
     def on_show(self):
-        arcade.set_background_color(arcade.color.LIGHT_BLUE)
+        arcade.set_background_color(arcade.color.LIGHT_BLUE) #Show the background
 
     def on_draw(self):
-        arcade.start_render()
+        arcade.start_render() #start rendering
 
         # Draw player, for effect, on pause screen.
         # The previous View (GameView) was passed in
         # and saved in self.game_view.
-        player_sprite = self.game_view.player_sprite
-        player_sprite.draw()
+        player_sprite = self.game_view.player_sprite #define sprites
+        player_sprite.draw() #draw sprites
 
         # draw an filter over him
         arcade.draw_lrtb_rectangle_filled(left=player_sprite.left,
@@ -563,7 +563,7 @@ class PauseView(arcade.View):
                                           color=arcade.color.LIGHT_BLUE + (200,))
 
         arcade.draw_text("PAUSED", SCREEN_WIDTH/2, SCREEN_HEIGHT/2+50,
-                         arcade.color.BLACK, font_size=50, anchor_x="center")
+                         arcade.color.BLACK, font_size=50, anchor_x="center") #Text in Pause View
 
         # Show tip to return or reset
         arcade.draw_text("Press Esc. to return",
