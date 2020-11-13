@@ -351,7 +351,7 @@ class GameView(arcade.View):
             bullet_sprite.center_x = self.player_sprite.center_x
             bullet_sprite.center_y = self.player_sprite.center_y
             bullet_sprite.update()
-
+            # add bulltet to bullet_list
             self.bullet_list.append(bullet_sprite)
             # sound
             arcade.play_sound(self.laser_sound, 0.03)
@@ -373,7 +373,7 @@ class GameView(arcade.View):
             bullet_sprite.center_x = self.player_sprite.center_x
             bullet_sprite.center_y = self.player_sprite.center_y
             bullet_sprite.update()
-
+            # add bulltet to bullet_list
             self.bullet_list.append(bullet_sprite)
             # sound
             arcade.play_sound(self.laser2_sound, 0.02)
